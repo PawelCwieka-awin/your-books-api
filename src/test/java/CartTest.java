@@ -2,7 +2,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TextX {
+public class CartTest {
 
     @Test
     public void cartIsCreatedEmpty() {
@@ -17,6 +17,16 @@ public class TextX {
         Book book = new Book(isbn);
         cart.add(book);
 
-        assertTrue(cart.containsByIsbn(book));
+
+        assertTrue(cart.containsByIsbn(isbn));
     }
+
+    @Test
+    public void getExceptionWhenAddedBookNotPublishedByLibrus() {
+        Cart cart = new Cart();
+        String isbn = "987";
+        Book book = new Book(isbn);
+        assertThrowsExactly(RuntimeException.class, () -> cart.add(book));
+    }
+
 }
