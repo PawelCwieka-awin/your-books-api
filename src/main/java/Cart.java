@@ -5,14 +5,18 @@ public class Cart {
 
     private final List<Book> books = new ArrayList<>();
 
-    private final Catalog catalog = new Catalog();
+    private final Catalog catalog;
+
+    public Cart(Catalog catalog) {
+        this.catalog = catalog;
+    }
 
     public boolean isEmpty() {
         return books.isEmpty();
     }
 
     public void add(Book book) {
-        if (catalog.contains(book) == false) {
+        if (!catalog.contains(book)) {
             throw new RuntimeException("Book is not published yet");
         }
         books.add(book);

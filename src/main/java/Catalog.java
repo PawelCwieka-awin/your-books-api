@@ -2,8 +2,14 @@ import java.util.List;
 
 public class Catalog {
 
-    List<String> isbnList = List.of("123", "456", "789");
+    private final List<String> isbnList;
+
+    public Catalog(List<String> isbnList) {
+        this.isbnList = isbnList;
+    }
+
     public boolean contains(Book book) {
         return isbnList.contains(book.getIsbn());
     }
+
 }
