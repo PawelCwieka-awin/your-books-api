@@ -116,30 +116,32 @@ public class CartTest {
 	 * On success: 0|TRANSACTION_ID
 	 * On error: 1|ERROR_DESCRIPTION
 	 */
-//	@Test
-//	public void testCanNotCheckoutEmptyCart() {
-//		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
-//		Cart emptyCart = createCartWithCatalogWithProducts();
-//
-//		assertThrows(RuntimeException.class, () -> {emptyCart.checkout(creditCard);});
-//	}
-//
-//	@Test
-//	public void testCanCheckoutCartWithOneProduct() {
-//		Cart cart = createCartWithCatalogWithProducts();
-//		cart.add(productSellBySupermarket(), 1);
-//
-//		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
-//		Receipt receipt = cart.checkout(creditCard);
-//
-//		assertEquals(new BigDecimal("10.00"), receipt.getTotal());
-//	}
+	@Test
+	public void testCanNotCheckoutEmptyCart() {
+		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
+		Cart emptyCart = createCartWithCatalogWithProducts();
+		Cashier cashier = new Cashier();
+
+		assertThrows(RuntimeException.class, () -> {cashier.checkout(emptyCart, creditCard);});
+	}
+
+	@Test
+	public void testCanCheckoutCartWithOneProduct() {
+		Cart cart = createCartWithCatalogWithProducts();
+		cart.add(productSellBySupermarket(), 1);
+
+		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
+		Cashier cashier = new Cashier();
+		Receipt receipt = cashier.checkout(cart, creditCard);
+
+		assertEquals(priceOfProductsSellBySupermarket(), receipt.getTotal());
+	}
 
 	@Test
 	public void testTotalPriceWithNoProducts() {
 		Cart emptyCart = new Cart(catalogWithProducts());
 		BigDecimal total = emptyCart.getTotal();
-		assertEquals(new BigDecimal("0.00"), total);
+		assertEquals(BigDecimal.ZERO, total);
 	}
 
 	@Test
