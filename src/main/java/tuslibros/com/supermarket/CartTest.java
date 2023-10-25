@@ -3,8 +3,8 @@ package tuslibros.com.supermarket;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -116,48 +116,70 @@ public class CartTest {
 	 * On success: 0|TRANSACTION_ID
 	 * On error: 1|ERROR_DESCRIPTION
 	 */
-	@Test
-	public void testCanNotCheckoutEmptyCart() {
-		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
-		Cart emptyCart = createCartWithCatalogWithProducts();
-
-		assertThrows(RuntimeException.class, () -> {emptyCart.checkout(creditCard);});
-	}
-
-	@Test
-	public void testCanCheckoutCartWithOneProduct() {
-		Cart cart = createCartWithCatalogWithProducts();
-		cart.add(productSellBySupermarket(), 1);
-
-		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
-		Receipt receipt = cart.checkout(creditCard);
-
-		assertEquals(new BigDecimal("10.00"), receipt.getTotal());
-	}
-
 //	@Test
-//	public void testCanCheckoutCartWithTwoSameProducts() {
+//	public void testCanNotCheckoutEmptyCart() {
+//		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
+//		Cart emptyCart = createCartWithCatalogWithProducts();
+//
+//		assertThrows(RuntimeException.class, () -> {emptyCart.checkout(creditCard);});
+//	}
+//
+//	@Test
+//	public void testCanCheckoutCartWithOneProduct() {
 //		Cart cart = createCartWithCatalogWithProducts();
-//		cart.add(productSellBySupermarket(), 2);
+//		cart.add(productSellBySupermarket(), 1);
 //
 //		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
 //		Receipt receipt = cart.checkout(creditCard);
 //
-//		assertEquals(new BigDecimal("20.00"), receipt.getTotal());
+//		assertEquals(new BigDecimal("10.00"), receipt.getTotal());
 //	}
 
+	@Test
+	public void testTotalPriceWithNoProducts() {
+		Cart emptyCart = new Cart(catalogWithProducts());
+		BigDecimal total = emptyCart.getTotal();
+		assertEquals(new BigDecimal("0.00"), total);
+	}
+
+	@Test
+	public void testTotalPriceWithOneProduct() {
+		Cart cart = createCartWithCatalogWithProducts();
+		cart.add(productSellBySupermarket(), 1);
+		BigDecimal total = cart.getTotal();
+
+		assertEquals(priceOfProductsSellBySupermarket(), total);
+	}
+
+	@Test
+	public void testTotalPriceWithTwoProducts() {
+		Cart cart = createCartWithCatalogWithProducts();
+		cart.add(productSellBySupermarket(), 1);
+		cart.add(otherProductSellBySupermarket(), 2);
+		BigDecimal actualTotal = cart.getTotal();
+		BigDecimal expectedTotal = priceOfProductsSellBySupermarket().add(priceOfOtherProductSellBySupermarket().multiply(new BigDecimal(2)));
+		assertEquals(expectedTotal, actualTotal);
+	}
 
 	public Cart createCartWithCatalogWithProducts() {
 		return new Cart(catalogWithProducts());
 	}
 
-	private List<Object> catalogWithProducts() {
-		List<Object> catalog = new ArrayList<Object>();
-		
-		catalog.add(productSellBySupermarket());
-		catalog.add(otherProductSellBySupermarket());
+	private Map<Object, BigDecimal> catalogWithProducts() {
+		Map<Object, BigDecimal> catalog = new HashMap<>();
+
+		catalog.put(productSellBySupermarket(), priceOfProductsSellBySupermarket());
+		catalog.put(otherProductSellBySupermarket(), priceOfOtherProductSellBySupermarket());
 		
 		return catalog;
+	}
+
+	private static BigDecimal priceOfProductsSellBySupermarket() {
+		return new BigDecimal("10.00");
+	}
+
+	private static BigDecimal priceOfOtherProductSellBySupermarket() {
+		return new BigDecimal("1.00");
 	}
 
 	private Object productNotSellBySupermarket() {

@@ -3,16 +3,17 @@ package tuslibros.com.supermarket;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Cart {
 
     public static final String PRODUCT_IS_NOT_SELL_BY_SUPERMARKET = "Product is not sell by supermarket";
     public static final String PRODUCT_QUANTITY_MUST_BE_STRICTLY_POSITIVE = "Product quantity must be strictly positive";
 
-    private List<Object> catalog;
+    private Map<Object, BigDecimal> catalog;
     private List<Object> products = new ArrayList<Object>();
 
-    public Cart(List<Object> catalog) {
+    public Cart(Map<Object, BigDecimal> catalog) {
         this.catalog = catalog;
     }
 
@@ -51,7 +52,7 @@ public class Cart {
     }
 
     public void assertProductIsSellBySupermarket(Object aProduct) {
-        if (!catalog.contains(aProduct)) throw new RuntimeException(PRODUCT_IS_NOT_SELL_BY_SUPERMARKET);
+        if (!catalog.containsKey(aProduct)) throw new RuntimeException(PRODUCT_IS_NOT_SELL_BY_SUPERMARKET);
     }
 
     public void assertQuantityIsStrictlyPositive(int aQuantity) {
@@ -63,5 +64,11 @@ public class Cart {
             throw new RuntimeException("You cannot checkout an empty cart");
         }
         return new Receipt(new BigDecimal("10.00"));
+    }
+
+    public BigDecimal getTotal() {
+        return products.stream().
+            map(product -> catalog.get(product)).
+            reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
