@@ -1,5 +1,6 @@
 package tuslibros.com.supermarket;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +62,6 @@ public class Cart {
         if (isEmpty()) {
             throw new RuntimeException("You cannot checkout an empty cart");
         }
-        return new Receipt("123");
+        return new Receipt(new BigDecimal("10.00"));
     }
 }

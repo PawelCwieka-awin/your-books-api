@@ -1,14 +1,16 @@
 package tuslibros.com.supermarket;
 
+import java.math.BigDecimal;
+
 public class Receipt {
 
-    String transactionId;
+    BigDecimal total;
 
-    public Receipt(String transactionId) {
-        this.transactionId = transactionId;
+    public Receipt(BigDecimal total) {
+        this.total = total;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public BigDecimal getTotal() {
+        return total;
     }
 }

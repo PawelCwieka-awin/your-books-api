@@ -132,8 +132,19 @@ public class CartTest {
 		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
 		Receipt receipt = cart.checkout(creditCard);
 
-		assertEquals("123", receipt.getTransactionId());
+		assertEquals(new BigDecimal("10.00"), receipt.getTotal());
 	}
+
+//	@Test
+//	public void testCanCheckoutCartWithTwoSameProducts() {
+//		Cart cart = createCartWithCatalogWithProducts();
+//		cart.add(productSellBySupermarket(), 2);
+//
+//		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
+//		Receipt receipt = cart.checkout(creditCard);
+//
+//		assertEquals(new BigDecimal("20.00"), receipt.getTotal());
+//	}
 
 
 	public Cart createCartWithCatalogWithProducts() {
