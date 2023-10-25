@@ -2,6 +2,7 @@ package tuslibros.com.supermarket;
 
 import static org.junit.Assert.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,6 +102,39 @@ public class CartTest {
 		assertEquals(2,cart.numberOf(productSellBySupermarket()));
 		assertEquals(3,cart.numberOf(otherProductSellBySupermarket()));
 	}
+
+	/**
+	 *
+	 *
+	 * Resource: /checkOutCart Parameters:
+	 *
+	 * cartId: cart id created using /createCart
+	 * ccn: Credit card number
+	 * cced: Credit card expiration date, with 2 digits for the month and 4 digits for the year
+	 * cco: Credit card owner’s name.
+	 * Output:
+	 * On success: 0|TRANSACTION_ID
+	 * On error: 1|ERROR_DESCRIPTION
+	 */
+	@Test
+	public void testCanNotCheckoutEmptyCart() {
+		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
+		Cart emptyCart = createCartWithCatalogWithProducts();
+
+		assertThrows(RuntimeException.class, () -> {emptyCart.checkout(creditCard);});
+	}
+
+	@Test
+	public void testCanCheckoutCartWithOneProduct() {
+		Cart cart = createCartWithCatalogWithProducts();
+		cart.add(productSellBySupermarket(), 1);
+
+		CreditCard creditCard = new CreditCard("1234567890123456", "012019", "John Doe");
+		Receipt receipt = cart.checkout(creditCard);
+
+		assertEquals("123", receipt.getTransactionId());
+	}
+
 
 	public Cart createCartWithCatalogWithProducts() {
 		return new Cart(catalogWithProducts());

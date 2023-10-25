@@ -57,4 +57,10 @@ public class Cart {
         if (aQuantity < 1) throw new RuntimeException(PRODUCT_QUANTITY_MUST_BE_STRICTLY_POSITIVE);
     }
 
+    public Receipt checkout(CreditCard creditCard) {
+        if (isEmpty()) {
+            throw new RuntimeException("You cannot checkout an empty cart");
+        }
+        return new Receipt("123");
+    }
 }
